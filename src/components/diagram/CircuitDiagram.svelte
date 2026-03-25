@@ -13,7 +13,7 @@
 </script>
 
 <div class="diagram-container">
-  <svg viewBox="0 0 650 {showNeutral ? 410 : 360}" class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="-50 0 700 {showNeutral ? 410 : 360}" class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
     <!-- Source side -->
     {#if isSourceY}
       <SourceY />

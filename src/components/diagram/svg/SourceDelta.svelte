@@ -24,13 +24,13 @@
   // Compact triangle centered around x=80, between y=70 and y=200
   const tri = {
     a: { x: 80, y: 70 },    // top — connects to wire a (y=70)
-    b: { x: 120, y: 185 },  // bottom-right — connects to wire b (y=200)
-    c: { x: 40, y: 185 },   // bottom-left — connects to wire c (y=330)
+    b: { x: 120, y: 200 },  // bottom-right — flush with wire b (y=200)
+    c: { x: 40, y: 200 },   // bottom-left — connects to wire c (y=330)
   };
 
   // Source positions on triangle edges (midpoints)
   const srcAB = { x: (tri.a.x + tri.b.x) / 2 + 8, y: (tri.a.y + tri.b.y) / 2 };
-  const srcBC = { x: (tri.b.x + tri.c.x) / 2, y: tri.b.y + 16 };
+  const srcBC = { x: (tri.b.x + tri.c.x) / 2, y: tri.b.y + 22 };
   const srcCA = { x: (tri.c.x + tri.a.x) / 2 - 8, y: (tri.c.y + tri.a.y) / 2 };
 
   const sources = [
@@ -79,9 +79,9 @@
     {/if}
   {:else if i === 1}
     <!-- Vbc: below -->
-    <text x={src.x} y={src.y + 14} fill={src.color} font-size="10" text-anchor="middle" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
+    <text x={src.x} y={src.y + 18} fill={src.color} font-size="10" text-anchor="middle" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
     {#if circuitState.sourceVoltages[i]}
-      <text x={src.x} y={src.y + 24} fill={src.color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
+      <text x={src.x} y={src.y + 28} fill={src.color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
     {/if}
   {:else}
     <!-- Vca: left of the source -->
@@ -95,8 +95,7 @@
 <!-- Wire from vertex a → rightward at y=70 (already at correct y) -->
 <line x1={tri.a.x} y1={tri.a.y} x2={zsX} y2={wireYs[0]} stroke="var(--svg-wire)" stroke-width="1.5" />
 
-<!-- Wire from vertex b → rightward at y=200 -->
-<line x1={tri.b.x} y1={tri.b.y} x2={tri.b.x} y2={wireYs[1]} stroke="var(--svg-wire)" stroke-width="1.5" />
+<!-- Wire from vertex b → rightward at y=200 (already flush) -->
 <line x1={tri.b.x} y1={wireYs[1]} x2={zsX} y2={wireYs[1]} stroke="var(--svg-wire)" stroke-width="1.5" />
 
 <!-- Wire from vertex c → down to y=330 then rightward -->
