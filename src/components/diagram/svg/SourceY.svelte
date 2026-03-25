@@ -3,67 +3,74 @@
   import { circuitState } from '../../../lib/state/circuit.svelte.js';
 
   const phases = [
-    { label: 'Van', color: 'var(--phase-a)', wireY: 80 },
-    { label: 'Vbn', color: 'var(--phase-b)', wireY: 210 },
-    { label: 'Vcn', color: 'var(--phase-c)', wireY: 340 }
+    { label: 'Van', color: 'var(--phase-a)', wireY: 70 },
+    { label: 'Vbn', color: 'var(--phase-b)', wireY: 200 },
+    { label: 'Vcn', color: 'var(--phase-c)', wireY: 330 }
   ];
 
-  const neutralX = 100;
-  const neutralY = 210;
-  const srcX = 60;
+  const neutralX = 55;
+  const neutralY = 200;
+  const srcX = 55;
+  const zsStartX = 120;
+  const lineOutX = 190;
 
-  function openSource(i) {
-    circuitState.activeModal = { type: 'source', index: i };
-  }
+  function openSource(i) { circuitState.activeModal = { type: 'source', index: i }; }
+  function openSourceZ(i) { circuitState.activeModal = { type: 'sourceZ', index: i }; }
 
-  function openSourceZ(i) {
-    circuitState.activeModal = { type: 'sourceZ', index: i };
+  function fmtVal(c) {
+    if (!c) return '';
+    const m = c.magnitude >= 100 ? c.magnitude.toFixed(0) : c.magnitude.toFixed(1);
+    return m + '\u2220' + c.angle.toFixed(1) + '\u00B0';
   }
 </script>
 
 <!-- Neutral point -->
 <circle cx={neutralX} cy={neutralY} r="3" fill="var(--svg-wire)" />
-<text x={neutralX - 5} y={neutralY + 18} fill="var(--text-muted)" font-size="11" text-anchor="end">n</text>
+<text x={neutralX} y={neutralY + 16} fill="var(--text-muted)" font-size="10" text-anchor="middle">n</text>
 
 {#each phases as phase, i}
-  <!-- Wire from neutral to source -->
+  <!-- Wire from neutral to source position -->
   <line x1={neutralX} y1={neutralY} x2={neutralX} y2={phase.wireY} stroke="var(--svg-wire)" stroke-width="1.5" />
-  <line x1={neutralX} y1={phase.wireY} x2={srcX} y2={phase.wireY} stroke="var(--svg-wire)" stroke-width="1.5" />
 
-  <!-- Voltage source circle -->
+  <!-- Voltage source circle (on the vertical wire) -->
+  {@const srcCy = phase.wireY < neutralY ? phase.wireY + 30 : phase.wireY > neutralY ? phase.wireY - 30 : phase.wireY}
   <InteractiveElement
     hasValue={!!circuitState.sourceVoltages[i]}
     x={srcX - 22} y={phase.wireY - 22} width={44} height={44}
     onclick={() => openSource(i)}
   >
-    <circle cx={srcX} cy={phase.wireY} r="16" fill="none" stroke={phase.color} stroke-width="2" class="component-body" />
-    <text x={srcX} y={phase.wireY + 1} fill={phase.color} font-size="9" text-anchor="middle" dominant-baseline="middle" font-weight="500">~</text>
-    <!-- Value indicator dot -->
-    <circle cx={srcX + 14} cy={phase.wireY - 14} r="3" fill={phase.color} class="value-dot" opacity={circuitState.sourceVoltages[i] ? 1 : 0} />
+    <circle cx={srcX} cy={phase.wireY} r="15" fill="none" stroke={phase.color} stroke-width="2" class="component-body" />
+    <text x={srcX} y={phase.wireY + 1} fill={phase.color} font-size="10" text-anchor="middle" dominant-baseline="middle">~</text>
   </InteractiveElement>
 
-  <!-- Label -->
-  <text x={srcX - 22} y={phase.wireY + 5} fill={phase.color} font-size="11" text-anchor="end" font-family="var(--font-mono)">{phase.label}</text>
+  <!-- Source voltage label + value -->
+  <text x={srcX - 20} y={phase.wireY - 2} fill={phase.color} font-size="10" text-anchor="end" font-family="var(--font-mono)" font-weight="600">{phase.label}</text>
+  {#if circuitState.sourceVoltages[i]}
+    <text x={srcX - 20} y={phase.wireY + 10} fill={phase.color} font-size="7" text-anchor="end" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
+  {/if}
 
-  <!-- Wire from source to Zs position -->
-  <line x1={srcX} y1={phase.wireY} x2={srcX + 32} y2={phase.wireY} stroke="var(--svg-wire)" stroke-width="1.5" />
+  <!-- Wire from source to Zs -->
+  <line x1={srcX + 15} y1={phase.wireY} x2={zsStartX} y2={phase.wireY} stroke="var(--svg-wire)" stroke-width="1.5" />
 
   <!-- Source impedance Zs -->
   <InteractiveElement
     hasValue={!!circuitState.sourceImpedances[i]}
-    x={srcX + 32} y={phase.wireY - 10} width={36} height={20}
+    x={zsStartX} y={phase.wireY - 10} width={40} height={20}
     onclick={() => openSourceZ(i)}
   >
-    <rect x={srcX + 34} y={phase.wireY - 8} width={30} height={16} rx="2"
-      fill="none" stroke={phase.color} stroke-width="1.5" class="component-body" opacity="0.7" />
-    <text x={srcX + 49} y={phase.wireY + 2} fill={phase.color} font-size="7" text-anchor="middle" dominant-baseline="middle" opacity="0.7">Zs</text>
+    <rect x={zsStartX + 2} y={phase.wireY - 7} width={28} height={14} rx="2"
+      fill="none" stroke={phase.color} stroke-width="1.2" class="component-body" opacity="0.6" />
+    <text x={zsStartX + 16} y={phase.wireY + 1} fill={phase.color} font-size="7" text-anchor="middle" dominant-baseline="middle" opacity="0.6">Zs</text>
   </InteractiveElement>
+  {#if circuitState.sourceImpedances[i]}
+    <text x={zsStartX + 16} y={phase.wireY + 14} fill={phase.color} font-size="6" text-anchor="middle" font-family="var(--font-mono)" opacity="0.5">{fmtVal(circuitState.sourceImpedances[i])}</text>
+  {/if}
 
   <!-- Wire from Zs to line out -->
-  <line x1={srcX + 66} y1={phase.wireY} x2={140} y2={phase.wireY} stroke="var(--svg-wire)" stroke-width="1.5" />
+  <line x1={zsStartX + 32} y1={phase.wireY} x2={lineOutX} y2={phase.wireY} stroke="var(--svg-wire)" stroke-width="1.5" />
 
   <!-- Terminal label -->
-  <text x={140} y={phase.wireY - 10} fill={phase.color} font-size="10" text-anchor="middle" font-weight="500">
+  <text x={lineOutX + 4} y={phase.wireY - 8} fill={phase.color} font-size="10" text-anchor="start" font-weight="600">
     {['a', 'b', 'c'][i]}
   </text>
 {/each}

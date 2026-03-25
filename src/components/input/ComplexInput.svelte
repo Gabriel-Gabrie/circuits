@@ -88,7 +88,7 @@
         </label>
       </div>
       <div class="field">
-        <label class="field-label">Angle (\u00B0)
+        <label class="field-label">Angle (°)
           <input type="number" step="any" bind:value={angle} placeholder="0" inputmode="decimal" />
         </label>
       </div>

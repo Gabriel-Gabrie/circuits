@@ -18,7 +18,7 @@
 
 <header class="header">
   <div class="header-top">
-    <h1 class="title">3\u03C6 Analyzer</h1>
+    <h1 class="title">3φ Analyzer</h1>
     <ThemeToggle />
   </div>
   <SegmentedControl
