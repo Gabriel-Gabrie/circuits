@@ -1,0 +1,16 @@
+{
+  "appId": "com.gabrielgabrie.circuits",
+  "appName": "Circuits",
+  "webDir": "dist",
+  "server": {
+    "iosScheme": "capacitor"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#0f1117",
+    "preferredContentMode": "mobile"
+  },
+  "android": {
+    "backgroundColor": "#0f1117"
+  }
+}

@@ -1,2 +1,13 @@
 node_modules/
 .vite/
+
+# iOS
+ios/App/App/public/
+ios/App/Pods/
+ios/App/output/
+*.xcuserdata
+
+# Android
+android/app/src/main/assets/public/
+android/app/build/
+android/.gradle/

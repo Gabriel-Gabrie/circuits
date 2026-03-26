@@ -54,6 +54,7 @@
 <style>
   .header {
     padding: var(--sp-4);
+    padding-top: calc(var(--sp-4) + env(safe-area-inset-top));
     padding-bottom: var(--sp-3);
     display: flex;
     flex-direction: column;

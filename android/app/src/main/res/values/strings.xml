@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Circuits</string>
+    <string name="title_activity_main">Circuits</string>
+    <string name="package_name">com.gabrielgabrie.circuits</string>
+    <string name="custom_url_scheme">com.gabrielgabrie.circuits</string>
+</resources>
