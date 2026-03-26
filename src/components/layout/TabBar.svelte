@@ -36,9 +36,15 @@
     display: flex;
     background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
-    padding: 6px 0 0;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding: 4px 0 0;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) - 12px);
     z-index: 100;
+  }
+
+  @supports not (padding: env(safe-area-inset-bottom)) {
+    .tabbar {
+      padding-bottom: 0;
+    }
   }
 
   .tab {
@@ -46,10 +52,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1px;
-    padding: 4px var(--sp-2);
+    gap: 0;
+    padding: 3px var(--sp-2);
     color: var(--text-muted);
-    font-size: var(--text-xs);
+    font-size: 9px;
     transition: color var(--transition-fast);
   }
 
