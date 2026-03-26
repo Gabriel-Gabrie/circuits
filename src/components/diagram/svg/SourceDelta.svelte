@@ -79,9 +79,9 @@
     {/if}
   {:else if i === 1}
     <!-- Vbc: below -->
-    <text x={src.x} y={src.y + 18} fill={src.color} font-size="10" text-anchor="middle" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
+    <text x={src.x} y={src.y + 24} fill={src.color} font-size="10" text-anchor="middle" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
     {#if circuitState.sourceVoltages[i]}
-      <text x={src.x} y={src.y + 28} fill={src.color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
+      <text x={src.x} y={src.y + 34} fill={src.color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
     {/if}
   {:else}
     <!-- Vca: left of the source -->
