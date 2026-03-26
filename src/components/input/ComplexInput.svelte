@@ -2,9 +2,10 @@
   import SegmentedControl from '../shared/SegmentedControl.svelte';
   import { Complex } from '../../lib/math/complex.js';
 
-  let { value = null, onchange = () => {} } = $props();
+  let { value = null, defaultMode = 'rect', onchange = () => {} } = $props();
 
-  let mode = $state('rect'); // 'phasor' | 'rect'
+  // eslint-disable-next-line -- intentionally captures initial value; component is recreated per modal open
+  let mode = $state(defaultMode);
 
   // Phasor inputs
   let mag = $state('');
@@ -17,10 +18,10 @@
   // Initialize from existing value
   $effect(() => {
     if (value) {
-      mag = value.magnitude.toFixed(4);
-      angle = value.angle.toFixed(4);
-      real = value.re.toFixed(4);
-      imag = value.im.toFixed(4);
+      mag = value.magnitude.toFixed(2);
+      angle = value.angle.toFixed(2);
+      real = value.re.toFixed(2);
+      imag = value.im.toFixed(2);
     }
   });
 
@@ -28,8 +29,8 @@
     const c = buildComplex();
     if (!c) return null;
     return {
-      phasor: c.toPhasor(4),
-      rect: c.toRect(4)
+      phasor: c.toPhasor(2),
+      rect: c.toRect(2)
     };
   });
 
@@ -57,12 +58,24 @@
     mode = newMode;
     if (c) {
       if (newMode === 'phasor') {
-        mag = c.magnitude.toFixed(4);
-        angle = c.angle.toFixed(4);
+        mag = c.magnitude.toFixed(2);
+        angle = c.angle.toFixed(2);
       } else {
-        real = c.re.toFixed(4);
-        imag = c.im.toFixed(4);
+        real = c.re.toFixed(2);
+        imag = c.im.toFixed(2);
       }
+    }
+  }
+
+  function toggleSign(field) {
+    if (field === 'mag') {
+      mag = mag.startsWith('-') ? mag.slice(1) : (mag && mag !== '0' ? '-' + mag : mag);
+    } else if (field === 'angle') {
+      angle = angle.startsWith('-') ? angle.slice(1) : (angle && angle !== '0' ? '-' + angle : angle);
+    } else if (field === 'real') {
+      real = real.startsWith('-') ? real.slice(1) : (real && real !== '0' ? '-' + real : real);
+    } else if (field === 'imag') {
+      imag = imag.startsWith('-') ? imag.slice(1) : (imag && imag !== '0' ? '-' + imag : imag);
     }
   }
 
@@ -84,23 +97,35 @@
     {#if mode === 'phasor'}
       <div class="field">
         <label class="field-label">Magnitude
-          <input type="number" step="any" bind:value={mag} placeholder="0"  />
+          <div class="input-row">
+            <input type="text" inputmode="decimal" bind:value={mag} placeholder="0" />
+            <button type="button" class="sign-btn" onclick={() => toggleSign('mag')}>&plusmn;</button>
+          </div>
         </label>
       </div>
       <div class="field">
-        <label class="field-label">Angle (°)
-          <input type="number" step="any" bind:value={angle} placeholder="0"  />
+        <label class="field-label">Angle ({'\u00B0'})
+          <div class="input-row">
+            <input type="text" inputmode="decimal" bind:value={angle} placeholder="0" />
+            <button type="button" class="sign-btn" onclick={() => toggleSign('angle')}>&plusmn;</button>
+          </div>
         </label>
       </div>
     {:else}
       <div class="field">
         <label class="field-label">Real
-          <input type="number" step="any" bind:value={real} placeholder="0"  />
+          <div class="input-row">
+            <input type="text" inputmode="decimal" bind:value={real} placeholder="0" />
+            <button type="button" class="sign-btn" onclick={() => toggleSign('real')}>&plusmn;</button>
+          </div>
         </label>
       </div>
       <div class="field">
         <label class="field-label">Imaginary (j)
-          <input type="number" step="any" bind:value={imag} placeholder="0"  />
+          <div class="input-row">
+            <input type="text" inputmode="decimal" bind:value={imag} placeholder="0" />
+            <button type="button" class="sign-btn" onclick={() => toggleSign('imag')}>&plusmn;</button>
+          </div>
         </label>
       </div>
     {/if}
@@ -138,6 +163,33 @@
     font-size: var(--text-xs);
     color: var(--text-muted);
     font-weight: 500;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .input-row input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sign-btn {
+    flex-shrink: 0;
+    width: 36px;
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-base);
+    font-weight: 600;
+    transition: background var(--transition-fast);
+  }
+
+  .sign-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
   }
 
   .preview {

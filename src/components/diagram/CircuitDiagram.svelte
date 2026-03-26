@@ -50,16 +50,14 @@
   }
 
   .circuit-svg {
-    min-width: 580px;
+    min-width: 700px;
     height: auto;
-    max-height: 50vh;
   }
 
   @media (min-width: 768px) {
     .circuit-svg {
       min-width: unset;
       width: 100%;
-      max-height: 60vh;
     }
   }
 </style>

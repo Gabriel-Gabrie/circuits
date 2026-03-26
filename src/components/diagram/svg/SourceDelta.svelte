@@ -2,30 +2,11 @@
   import InteractiveElement from '../InteractiveElement.svelte';
   import { circuitState } from '../../../lib/state/circuit.svelte.js';
 
-  // Reference layout: compact triangle, sources on edges
-  // Triangle sits in left portion, vertices connect to horizontal wires
-  //
-  //        a ─────────────────── (wire a at y=70)
-  //       / \
-  //    Vca   Vab
-  //     /     \
-  //    c───────b
-  //    |  Vbc  |
-  //    c ──────b ────────────── (wire b at y=200)
-  //    |
-  //    c ─────────────────── (wire c at y=330)
-
-  // Triangle vertices
-  const ax = 90, ay = 70;    // top vertex → wire a
-  const bx = 120, by = 180;  // right vertex → wire b
-  const cx = 50, by2 = 180;  // left vertex → wire c
-  // Actually let me make a proper equilateral-ish triangle
-
   // Compact triangle centered around x=80, between y=70 and y=200
   const tri = {
-    a: { x: 80, y: 70 },    // top — connects to wire a (y=70)
-    b: { x: 120, y: 200 },  // bottom-right — flush with wire b (y=200)
-    c: { x: 40, y: 200 },   // bottom-left — connects to wire c (y=330)
+    a: { x: 80, y: 70 },
+    b: { x: 120, y: 200 },
+    c: { x: 40, y: 200 },
   };
 
   // Source positions on triangle edges (midpoints)
@@ -39,19 +20,19 @@
     { label: 'Vca', color: 'var(--phase-c)', ...srcCA },
   ];
 
-  const wireYs = [70, 200, 330]; // y positions for the 3 horizontal lines
-  const zsX = 140;               // Zs box start
-  const lineOutX = 190;          // where wires exit to the line
+  const wireYs = [70, 200, 330];
+  const zsX = 140;
+  const lineOutX = 190;
 
   function openSource(i) { circuitState.activeModal = { type: 'source', index: i }; }
   function openSourceZ(i) { circuitState.activeModal = { type: 'sourceZ', index: i }; }
 
   function fmtVal(c) {
     if (!c) return '';
-    const r = Math.abs(c.re) >= 100 ? c.re.toFixed(0) : c.re.toFixed(1);
-    const im = Math.abs(c.im) >= 100 ? Math.abs(c.im).toFixed(0) : Math.abs(c.im).toFixed(1);
-    if (Math.abs(c.im) < 0.05) return r;
-    if (Math.abs(c.re) < 0.05) return (c.im < 0 ? '-j' : 'j') + im;
+    const r = c.re.toFixed(2);
+    const im = Math.abs(c.im).toFixed(2);
+    if (Math.abs(c.im) < 0.005) return r;
+    if (Math.abs(c.re) < 0.005) return (c.im < 0 ? '-j' : 'j') + im;
     return r + (c.im >= 0 ? '+j' : '-j') + im;
   }
 </script>
@@ -63,41 +44,40 @@
 
 <!-- Sources on triangle edges -->
 {#each sources as src, i}
+  {@const isDimmed = circuitState.sourceBalanced && i > 0}
   <InteractiveElement
     hasValue={!!circuitState.sourceVoltages[i]}
+    dimmed={isDimmed}
     x={src.x - 18} y={src.y - 18} width={36} height={36}
     onclick={() => openSource(i)}
   >
     <circle cx={src.x} cy={src.y} r="13" fill="var(--bg-primary)" stroke={src.color} stroke-width="2" class="component-body" />
-    <text x={src.x} y={src.y + 1} fill={src.color} font-size="10" text-anchor="middle" dominant-baseline="middle">~</text>
+    <text x={src.x} y={src.y + 1} fill={src.color} font-size="12" text-anchor="middle" dominant-baseline="middle">~</text>
   </InteractiveElement>
 
   <!-- Label outside the triangle -->
   {#if i === 0}
-    <!-- Vab: right of the source -->
-    <text x={src.x + 18} y={src.y - 2} fill={src.color} font-size="10" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
+    <text x={src.x + 18} y={src.y - 2} fill={src.color} font-size="12" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
     {#if circuitState.sourceVoltages[i]}
-      <text x={src.x + 18} y={src.y + 9} fill={src.color} font-size="7" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
+      <text x={src.x + 18} y={src.y + 10} fill={src.color} font-size="8" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
     {/if}
   {:else if i === 1}
-    <!-- Vbc: below -->
-    <text x={src.x} y={src.y + 24} fill={src.color} font-size="10" text-anchor="middle" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
+    <text x={src.x} y={src.y + 24} fill={src.color} font-size="12" text-anchor="middle" font-family="var(--font-mono)" font-weight="600" opacity={isDimmed ? 0.3 : 1}>{src.label}</text>
     {#if circuitState.sourceVoltages[i]}
-      <text x={src.x} y={src.y + 34} fill={src.color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
+      <text x={src.x} y={src.y + 35} fill={src.color} font-size="8" text-anchor="middle" font-family="var(--font-mono)" opacity={isDimmed ? 0.2 : 0.7}>{fmtVal(circuitState.sourceVoltages[i])}</text>
     {/if}
   {:else}
-    <!-- Vca: left of the source -->
-    <text x={src.x - 18} y={src.y - 2} fill={src.color} font-size="10" text-anchor="end" font-family="var(--font-mono)" font-weight="600">{src.label}</text>
+    <text x={src.x - 18} y={src.y - 2} fill={src.color} font-size="12" text-anchor="end" font-family="var(--font-mono)" font-weight="600" opacity={isDimmed ? 0.3 : 1}>{src.label}</text>
     {#if circuitState.sourceVoltages[i]}
-      <text x={src.x - 18} y={src.y + 9} fill={src.color} font-size="7" text-anchor="end" font-family="var(--font-mono)" opacity="0.7">{fmtVal(circuitState.sourceVoltages[i])}</text>
+      <text x={src.x - 18} y={src.y + 10} fill={src.color} font-size="8" text-anchor="end" font-family="var(--font-mono)" opacity={isDimmed ? 0.2 : 0.7}>{fmtVal(circuitState.sourceVoltages[i])}</text>
     {/if}
   {/if}
 {/each}
 
-<!-- Wire from vertex a → rightward at y=70 (already at correct y) -->
+<!-- Wire from vertex a → rightward at y=70 -->
 <line x1={tri.a.x} y1={tri.a.y} x2={zsX} y2={wireYs[0]} stroke="var(--svg-wire)" stroke-width="1.5" />
 
-<!-- Wire from vertex b → rightward at y=200 (already flush) -->
+<!-- Wire from vertex b → rightward at y=200 -->
 <line x1={tri.b.x} y1={wireYs[1]} x2={zsX} y2={wireYs[1]} stroke="var(--svg-wire)" stroke-width="1.5" />
 
 <!-- Wire from vertex c → down to y=330 then rightward -->
@@ -107,25 +87,24 @@
 <!-- Zs boxes and output wires for each phase -->
 {#each [0, 1, 2] as i}
   {@const color = sources[i].color}
-  <!-- Zs -->
+  {@const isDimmed = circuitState.sourceBalanced && i > 0}
   <InteractiveElement
     hasValue={!!circuitState.sourceImpedances[i]}
+    dimmed={isDimmed}
     x={zsX} y={wireYs[i] - 9} width={32} height={18}
     onclick={() => openSourceZ(i)}
   >
     <rect x={zsX + 2} y={wireYs[i] - 7} width={26} height={14} rx="2"
       fill="none" stroke={color} stroke-width="1.2" class="component-body" opacity="0.6" />
-    <text x={zsX + 15} y={wireYs[i] + 1} fill={color} font-size="7" text-anchor="middle" dominant-baseline="middle" opacity="0.6">Zs</text>
+    <text x={zsX + 15} y={wireYs[i] + 1} fill={color} font-size="8" text-anchor="middle" dominant-baseline="middle" opacity="0.6">Zs</text>
   </InteractiveElement>
   {#if circuitState.sourceImpedances[i]}
-    <text x={zsX + 15} y={wireYs[i] + 15} fill={color} font-size="6" text-anchor="middle" font-family="var(--font-mono)" opacity="0.5">{fmtVal(circuitState.sourceImpedances[i])}</text>
+    <text x={zsX + 15} y={wireYs[i] + 15} fill={color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity={isDimmed ? 0.2 : 0.5}>{fmtVal(circuitState.sourceImpedances[i])}</text>
   {/if}
 
-  <!-- Wire out -->
-  <line x1={zsX + 30} y1={wireYs[i]} x2={lineOutX} y2={wireYs[i]} stroke="var(--svg-wire)" stroke-width="1.5" />
+  <line x1={zsX + 30} y1={wireYs[i]} x2={lineOutX} y2={wireYs[i]} stroke="var(--svg-wire)" stroke-width="1.5" opacity={isDimmed ? 0.3 : 1} />
 
-  <!-- Terminal label -->
-  <text x={lineOutX + 4} y={wireYs[i] - 8} fill={color} font-size="10" text-anchor="start" font-weight="600">
+  <text x={lineOutX + 4} y={wireYs[i] - 8} fill={color} font-size="12" text-anchor="start" font-weight="600" opacity={isDimmed ? 0.3 : 1}>
     {['a', 'b', 'c'][i]}
   </text>
 {/each}

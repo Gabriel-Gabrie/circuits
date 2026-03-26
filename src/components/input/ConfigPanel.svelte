@@ -1,12 +1,15 @@
 <script>
   import SegmentedControl from '../shared/SegmentedControl.svelte';
-  import { circuitState } from '../../lib/state/circuit.svelte.js';
+  import { circuitState, getPhaseAngles } from '../../lib/state/circuit.svelte.js';
 
   const sequenceOptions = [
     { value: 'abc', label: 'Positive (abc)' },
     { value: 'acb', label: 'Negative (acb)' },
     { value: 'custom', label: 'Custom' }
   ];
+
+  const displayAngles = $derived(getPhaseAngles(circuitState));
+  const isCustom = $derived(circuitState.sequence === 'custom');
 
   function handleSequence(val) {
     circuitState.sequence = val;
@@ -61,28 +64,27 @@
     />
   </div>
 
-  {#if circuitState.sequence === 'custom'}
-    <div class="custom-angles">
-      <span class="config-label">Phase Offsets (degrees from Phase A)</span>
-      <div class="angle-fields">
-        {#each [['A', 'var(--phase-a)'], ['B', 'var(--phase-b)'], ['C', 'var(--phase-c)']] as [label, color], i}
-          <div class="angle-field">
-            <label class="angle-label" style="color: {color}">
-              Phase {label}
-              <input
-                type="number"
-                step="any"
-                value={circuitState.customAngles[i]}
-                oninput={(e) => updateCustomAngle(i, e)}
-                inputmode="decimal"
-                disabled={i === 0}
-              />
-            </label>
-          </div>
-        {/each}
-      </div>
+  <!-- Always show phase angles -->
+  <div class="phase-angles">
+    <span class="config-label">Phase Angles</span>
+    <div class="angle-fields">
+      {#each [['A', 'var(--phase-a)'], ['B', 'var(--phase-b)'], ['C', 'var(--phase-c)']] as [label, color], i}
+        <div class="angle-field">
+          <label class="angle-label" style="color: {color}">
+            Phase {label}
+            <input
+              type="text"
+              inputmode="decimal"
+              value={isCustom ? circuitState.customAngles[i] : displayAngles[i]}
+              oninput={(e) => updateCustomAngle(i, e)}
+              disabled={!isCustom || i === 0}
+            />
+          </label>
+          <span class="angle-unit">{'\u00B0'}</span>
+        </div>
+      {/each}
     </div>
-  {/if}
+  </div>
 </div>
 
 <style>
@@ -156,7 +158,7 @@
     letter-spacing: 0.05em;
   }
 
-  .custom-angles {
+  .phase-angles {
     display: flex;
     flex-direction: column;
     gap: var(--sp-2);
@@ -170,7 +172,7 @@
 
   .angle-field {
     display: flex;
-    flex-direction: column;
+    align-items: flex-end;
     gap: 2px;
   }
 
@@ -181,6 +183,13 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
+  }
+
+  .angle-unit {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    padding-bottom: var(--sp-1);
   }
 
   .angle-field input {
@@ -189,7 +198,7 @@
   }
 
   .angle-field input:disabled {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 

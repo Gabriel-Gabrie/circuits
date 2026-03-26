@@ -30,6 +30,11 @@
     }
   });
 
+  const defaultInputMode = $derived.by(() => {
+    if (!modal) return 'rect';
+    return modal.type === 'source' ? 'phasor' : 'rect';
+  });
+
   const isBalancedModal = $derived.by(() => {
     if (!modal) return false;
     if (modal.type === 'source' || modal.type === 'sourceZ') return circuitState.sourceBalanced;
@@ -122,7 +127,7 @@
     </div>
 
     <div class="modal-body">
-      <ComplexInput bind:this={complexInput} value={currentValue} />
+      <ComplexInput bind:this={complexInput} value={currentValue} defaultMode={defaultInputMode} />
     </div>
 
     <div class="modal-actions">

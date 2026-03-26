@@ -1,14 +1,15 @@
 <script>
-  let { hasValue = false, x = 0, y = 0, width = 44, height = 44, onclick = () => {}, children } = $props();
+  let { hasValue = false, dimmed = false, x = 0, y = 0, width = 44, height = 44, onclick = () => {}, children } = $props();
 </script>
 
 <g
   class="interactive"
   class:has-value={hasValue}
+  class:dimmed={dimmed}
   role="button"
-  tabindex="0"
-  onclick={onclick}
-  onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onclick(); } }}
+  tabindex={dimmed ? -1 : 0}
+  onclick={dimmed ? undefined : onclick}
+  onkeydown={dimmed ? undefined : (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onclick(); } }}
 >
   <!-- Transparent hit area for easier tapping -->
   <rect
@@ -44,5 +45,11 @@
 
   .hit-area {
     cursor: pointer;
+  }
+
+  .dimmed {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: default;
   }
 </style>

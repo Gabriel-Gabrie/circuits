@@ -117,25 +117,8 @@
       padding-bottom: var(--sp-4);
     }
 
-    .main-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--sp-6);
-      align-items: start;
-    }
-
     .hidden {
       display: flex;
-    }
-
-    .results-section {
-      margin-top: 0;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .main-content {
-      grid-template-columns: 3fr 2fr;
     }
   }
 </style>
