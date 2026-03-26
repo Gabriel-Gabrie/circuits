@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f1117" />
+  <meta name="description" content="Circuits — A free, interactive 3-phase AC circuit analyzer. Supports Y and Delta configurations, balanced and unbalanced systems, phasor diagrams, and full power analysis." />
+  <meta property="og:title" content="Circuits — 3-Phase AC Analyzer" />
+  <meta property="og:description" content="Analyze 3-phase AC circuits instantly. Tap components, enter values, get results. No sign-up required." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://circuits.gabrielgabrie.com/landing" />
+  <link rel="icon" type="image/svg+xml" href="../dist/favicon.svg" />
+  <title>Circuits — 3-Phase AC Circuit Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0f1117;
+      --bg-surface: #232733;
+      --bg-elevated: #2d3140;
+      --text: #e8eaed;
+      --text-secondary: #9aa0a6;
+      --text-muted: #5f6368;
+      --accent: #7c8cf8;
+      --accent-hover: #6a7bf0;
+      --border: #2a2f3b;
+      --phase-a: #ff6b6b;
+      --phase-b: #4ecdc4;
+      --phase-c: #ffe66d;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-brand: 'Orbitron', sans-serif;
+      --radius: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); }
+
+    /* ---- NAV ---- */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 17, 23, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-brand);
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.875rem;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+
+    .nav-cta:hover { background: var(--accent-hover); color: #fff; }
+
+    /* ---- HERO ---- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124, 140, 248, 0.12) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 32px;
+    }
+
+    .hero-logo svg {
+      width: 80px;
+      height: 80px;
+      filter: drop-shadow(0 0 30px rgba(124, 140, 248, 0.3));
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-brand);
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+
+    .hero-actions {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 10px;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); color: #fff; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover { border-color: var(--accent); color: var(--text); }
+
+    .hero-badge {
+      position: relative;
+      z-index: 1;
+      margin-top: 32px;
+      display: flex;
+      gap: 24px;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
+    .hero-badge span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ---- SECTION ---- */
+    section { padding: 80px 24px; }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      max-width: 560px;
+      font-size: 1.05rem;
+      margin-bottom: 48px;
+    }
+
+    /* ---- FEATURES ---- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+    }
+
+    .feature-icon svg { width: 24px; height: 24px; }
+
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.55;
+    }
+
+    /* ---- DEMO / SCREENSHOTS ---- */
+    .demo-section {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .demo-frame {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .demo-topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .demo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .demo-dot:nth-child(1) { background: #ef5350; }
+    .demo-dot:nth-child(2) { background: #ffe66d; }
+    .demo-dot:nth-child(3) { background: #66bb6a; }
+
+    .demo-url {
+      flex: 1;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: 'Inter', monospace;
+    }
+
+    .demo-frame iframe {
+      width: 100%;
+      height: 560px;
+      border: none;
+      display: block;
+    }
+
+    .demo-cta {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    /* ---- HOW IT WORKS ---- */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      padding-left: 56px;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .step p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    /* ---- CONFIGS ---- */
+    .configs-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .config-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 20px 28px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.2s;
+    }
+
+    .config-badge:hover { border-color: var(--accent); }
+
+    .config-badge .config-name {
+      font-family: var(--font-brand);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .config-badge .config-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      text-align: center;
+      padding: 100px 24px;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .cta-section p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ---- FOOTER ---- */
+    .footer {
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-brand);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 640px) {
+      .nav { padding: 12px 16px; }
+      section { padding: 60px 20px; }
+      .demo-frame iframe { height: 400px; }
+      .step { padding-left: 48px; }
+      .configs-row { gap: 12px; }
+      .config-badge { padding: 14px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <svg viewBox="0 0 32 32" width="24" height="24">
+        <circle cx="16" cy="16" r="14" fill="none" stroke="#7c8cf8" stroke-width="2"/>
+        <path d="M8 16q4-7 8 0t8 0" fill="none" stroke="#7c8cf8" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      Circuits
+    </div>
+    <a href="../dist/index.html" class="nav-cta">
+      Launch App
+      <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/></svg>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-logo">
+      <svg viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="14" fill="none" stroke="#7c8cf8" stroke-width="1.5"/>
+        <path d="M8 16q4-7 8 0t8 0" fill="none" stroke="#7c8cf8" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1>Circuits</h1>
+    <p class="hero-sub">A free, interactive 3-phase AC circuit analyzer. Tap components, enter values, get instant results.</p>
+    <div class="hero-actions">
+      <a href="../dist/index.html" class="btn btn-primary">
+        Launch App
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/></svg>
+      </a>
+      <a href="https://github.com/Gabriel-Gabrie/circuits" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        View Source
+      </a>
+    </div>
+    <div class="hero-badge">
+      <span>
+        <svg viewBox="0 0 20 20" width="14" height="14" fill="var(--text-muted)"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/></svg>
+        No sign-up
+      </span>
+      <span>
+        <svg viewBox="0 0 20 20" width="14" height="14" fill="var(--text-muted)"><path d="M5 2a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7.414A2 2 0 0016.414 6L12 1.586A2 2 0 0010.586 1H5zm5 1.414L14.586 7H11a1 1 0 01-1-1V3.414z"/></svg>
+        100% client-side
+      </span>
+      <span>
+        <svg viewBox="0 0 20 20" width="14" height="14" fill="var(--text-muted)"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm3 7V7a3 3 0 10-6 0v2h6z"/></svg>
+        No data leaves your device
+      </span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section>
+    <div class="section-inner">
+      <p class="section-label">Features</p>
+      <h2 class="section-title">Everything you need for 3-phase analysis</h2>
+      <p class="section-desc">Built for electrical engineering students and professionals who need quick, accurate circuit calculations.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(124,140,248,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7c8cf8" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 12q2-4 4 0t4 0"/>
+            </svg>
+          </div>
+          <h3>Interactive Diagram</h3>
+          <p>Tap directly on circuit components to enter values. The SVG diagram updates in real time as you configure your circuit.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(78,205,196,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3>Phasor Diagrams</h3>
+          <p>Visualize voltage and current phasors with an interactive, zoomable diagram. Tap any phasor to see its exact value.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(255,107,107,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+          </div>
+          <h3>Full Power Analysis</h3>
+          <p>Get per-phase and total apparent, real, and reactive power with power factor for every calculation.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(255,230,109,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ffe66d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18M9 3v18"/>
+            </svg>
+          </div>
+          <h3>Balanced & Unbalanced</h3>
+          <p>Toggle between balanced and unbalanced systems. Balanced mode auto-fills all phases from a single input.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(102,187,106,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#66bb6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Privacy First</h3>
+          <p>Runs entirely in your browser. No server, no account, no tracking. Your data never leaves your device.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(124,140,248,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7c8cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+          </div>
+          <h3>Mobile Friendly</h3>
+          <p>Designed mobile-first with touch-optimized inputs, bottom-sheet modals, and responsive layouts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIGURATIONS -->
+  <section>
+    <div class="section-inner" style="text-align: center;">
+      <p class="section-label">Configurations</p>
+      <h2 class="section-title">All four 3-phase topologies</h2>
+      <p class="section-desc" style="margin-left: auto; margin-right: auto;">Switch between configurations instantly and see how results change in real time.</p>
+
+      <div class="configs-row">
+        <div class="config-badge">
+          <span class="config-name">Y-Y</span>
+          <span class="config-desc">Wye to Wye</span>
+        </div>
+        <div class="config-badge">
+          <span class="config-name" style="color: var(--phase-b);">Y-&#916;</span>
+          <span class="config-desc">Wye to Delta</span>
+        </div>
+        <div class="config-badge">
+          <span class="config-name" style="color: var(--phase-a);">&#916;-Y</span>
+          <span class="config-desc">Delta to Wye</span>
+        </div>
+        <div class="config-badge">
+          <span class="config-name" style="color: var(--phase-c);">&#916;-&#916;</span>
+          <span class="config-desc">Delta to Delta</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE DEMO -->
+  <section class="demo-section">
+    <div class="section-inner">
+      <p class="section-label">Live Demo</p>
+      <h2 class="section-title">Try it right here</h2>
+      <p class="section-desc">The full app running live below. Enter values and calculate.</p>
+
+      <div class="demo-frame">
+        <div class="demo-topbar">
+          <span class="demo-dot"></span>
+          <span class="demo-dot"></span>
+          <span class="demo-dot"></span>
+          <span class="demo-url">circuits.gabrielgabrie.com</span>
+        </div>
+        <iframe src="../dist/index.html" title="Circuits App" loading="lazy"></iframe>
+      </div>
+
+      <div class="demo-cta">
+        <a href="../dist/index.html" class="btn btn-primary" style="margin-top: 24px;">
+          Open Full App
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5zM5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section>
+    <div class="section-inner">
+      <p class="section-label">How It Works</p>
+      <h2 class="section-title">Three steps to results</h2>
+      <p class="section-desc">No complex setup. Just pick, tap, and calculate.</p>
+
+      <div class="steps-grid">
+        <div class="step">
+          <h3>Pick a Configuration</h3>
+          <p>Choose from Y-Y, Y-Delta, Delta-Y, or Delta-Delta. Set balanced or unbalanced, and select your phase sequence.</p>
+        </div>
+        <div class="step">
+          <h3>Enter Values</h3>
+          <p>Tap any component on the circuit diagram to open the input modal. Enter values in rectangular or phasor form.</p>
+        </div>
+        <div class="step">
+          <h3>Get Results</h3>
+          <p>Press Calculate to see all voltages, currents, power values, and an interactive phasor diagram.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to analyze?</h2>
+    <p>Free, fast, and private. Start solving 3-phase circuits now.</p>
+    <a href="../dist/index.html" class="btn btn-primary">
+      Launch Circuits
+      <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/></svg>
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <svg viewBox="0 0 32 32" width="18" height="18">
+        <circle cx="16" cy="16" r="14" fill="none" stroke="#7c8cf8" stroke-width="2"/>
+        <path d="M8 16q4-7 8 0t8 0" fill="none" stroke="#7c8cf8" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      Circuits
+    </div>
+    <div class="footer-links">
+      <a href="https://gabrielgabrie.com" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        gabrielgabrie.com
+      </a>
+      <a href="https://buymeacoffee.com/gabrielgabrie" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        Support the Developer
+      </a>
+      <a href="https://github.com/Gabriel-Gabrie/circuits" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+    <p class="footer-copy">&copy; 2026 Gabriel Gabrie. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
