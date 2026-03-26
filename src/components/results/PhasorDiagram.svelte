@@ -49,11 +49,11 @@
 
   // Grid circles based on voltage scale
   let gridCircles = $derived.by(() => {
-    const steps = 4;
+    const steps = 3;
     const stepMag = maxVmag / steps;
     return Array.from({ length: steps }, (_, i) => ({
       r: ((i + 1) * stepMag) * vScale,
-      label: ((i + 1) * stepMag).toFixed(1)
+      label: Math.round((i + 1) * stepMag).toString()
     }));
   });
 
@@ -70,8 +70,8 @@
     const end = phasorEnd(p);
     tooltip = {
       label: p.label,
-      value: formatComplex(p.complex, 'phasor', 4),
-      rect: formatComplex(p.complex, 'rect', 4),
+      value: formatComplex(p.complex, 'phasor', 2),
+      rect: formatComplex(p.complex, 'rect', 2),
       x: end.x, y: end.y
     };
   }
@@ -129,7 +129,7 @@
       <!-- Grid circles (voltage scale) -->
       {#each gridCircles as gc}
         <circle cx={cx} cy={cy} r={gc.r} fill="none" stroke="var(--border-subtle)" stroke-width="0.5" />
-        <text x={cx + gc.r + 4} y={cy - 4} fill="var(--text-muted)" font-size="8" font-family="var(--font-mono)">{gc.label}</text>
+        <text x={cx + 3} y={cy - gc.r + 10} fill="var(--text-muted)" font-size="8" font-family="var(--font-mono)" opacity="0.6">{gc.label}</text>
       {/each}
 
       <!-- Axes -->
