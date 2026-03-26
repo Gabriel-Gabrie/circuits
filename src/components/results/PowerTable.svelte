@@ -31,7 +31,7 @@
           </div>
           <div class="power-item">
             <span class="power-key">PF</span>
-            <span class="power-val">{p.PF.toFixed(4)}</span>
+            <span class="power-val">{p.PF.toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@
         </div>
         <div class="power-item">
           <span class="power-key">PF</span>
-          <span class="power-val">{results.power.total.PF.toFixed(4)}</span>
+          <span class="power-val">{results.power.total.PF.toFixed(2)}</span>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@
     {#each results.sourcePhaseVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{srcPhaseLabels[i]}</span>
-        <span class="val">{formatComplex(v, 'phasor', 4)}</span>
+        <span class="val">{formatComplex(v, 'phasor', 2)}</span>
       </div>
     {/each}
   </div>
@@ -34,7 +34,7 @@
     {#each results.sourceLineVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{srcLineLabels[i]}</span>
-        <span class="val">{formatComplex(v, 'phasor', 4)}</span>
+        <span class="val">{formatComplex(v, 'phasor', 2)}</span>
       </div>
     {/each}
   </div>
@@ -45,7 +45,7 @@
     {#each results.loadPhaseVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{loadPhaseLabels[i]}</span>
-        <span class="val">{formatComplex(v, 'phasor', 4)}</span>
+        <span class="val">{formatComplex(v, 'phasor', 2)}</span>
       </div>
     {/each}
   </div>
@@ -56,7 +56,7 @@
     {#each results.loadLineVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{loadLineLabels[i]}</span>
-        <span class="val">{formatComplex(v, 'phasor', 4)}</span>
+        <span class="val">{formatComplex(v, 'phasor', 2)}</span>
       </div>
     {/each}
   </div>

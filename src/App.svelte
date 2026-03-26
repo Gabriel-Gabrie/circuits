@@ -10,6 +10,19 @@
 
   let error = $state(null);
 
+  // Auto-recalculate when config changes (if results already exist)
+  $effect(() => {
+    const _config = circuitState.config; // track config changes
+    if (circuitState.results) {
+      try {
+        circuitState.results = solveCircuit(circuitState);
+        error = null;
+      } catch (e) {
+        error = e.message;
+      }
+    }
+  });
+
   function handleCalculate() {
     error = null;
     try {

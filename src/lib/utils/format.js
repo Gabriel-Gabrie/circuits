@@ -19,7 +19,7 @@ export function formatPower(value, unit = 'W') {
   if (abs >= 1e6) return `${(value / 1e6).toFixed(2)} M${unit}`;
   if (abs >= 1e3) return `${(value / 1e3).toFixed(2)} k${unit}`;
   if (abs < 0.01 && abs > 0) return `${(value * 1e3).toFixed(2)} m${unit}`;
-  return `${value.toFixed(4)} ${unit}`;
+  return `${value.toFixed(2)} ${unit}`;
 }
 
 /**

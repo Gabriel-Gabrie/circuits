@@ -29,11 +29,7 @@
 
   function fmtVal(c) {
     if (!c) return '';
-    const r = c.re.toFixed(2);
-    const im = Math.abs(c.im).toFixed(2);
-    if (Math.abs(c.im) < 0.005) return r;
-    if (Math.abs(c.re) < 0.005) return (c.im < 0 ? '-j' : 'j') + im;
-    return r + (c.im >= 0 ? '+j' : '-j') + im;
+    return c.magnitude.toFixed(2) + '\u2220' + c.angle.toFixed(2) + '\u00B0';
   }
 </script>
 
