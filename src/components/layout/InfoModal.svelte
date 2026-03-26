@@ -15,7 +15,13 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="modal-sheet" onclick={(e) => e.stopPropagation()}>
     <div class="modal-header">
-      <h3 class="modal-title">Circuits</h3>
+      <h3 class="modal-title">
+        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="2"/>
+          <path d="M8 16q4-7 8 0t8 0" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        Circuits
+      </h3>
       <button class="modal-close" onclick={onclose} aria-label="Close">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="18" y1="6" x2="6" y2="18" />
@@ -104,8 +110,13 @@
   }
 
   .modal-title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: 'Orbitron', sans-serif;
     font-size: var(--text-base);
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
 
   .modal-close {
