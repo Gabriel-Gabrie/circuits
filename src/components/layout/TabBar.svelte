@@ -8,9 +8,15 @@
     class:active={circuitState.activeTab === 'diagram'}
     onclick={() => circuitState.activeTab = 'diagram'}
   >
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <path d="M9 3v18M3 9h6M3 15h6" />
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- circuit: wire path with component box -->
+      <path d="M2 12h4" />
+      <rect x="6" y="9" width="5" height="6" rx="1" />
+      <path d="M11 12h3" />
+      <circle cx="17" cy="12" r="3" />
+      <path d="M20 12h2" />
+      <!-- branch -->
+      <path d="M8.5 9V6h8v3M8.5 15v3h8v-3" />
     </svg>
     <span>Circuit</span>
   </button>
@@ -19,8 +25,9 @@
     class:active={circuitState.activeTab === 'results'}
     onclick={() => circuitState.activeTab = 'results'}
   >
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 20V10M6 20V4M18 20v-6" stroke-linecap="round"/>
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- hash/number symbol -->
+      <path d="M5 9h14M5 15h14M10 4l-2 16M16 4l-2 16" />
     </svg>
     <span>Results</span>
   </button>
