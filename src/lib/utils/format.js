@@ -4,7 +4,7 @@
  * @param {'rect'|'phasor'} mode
  * @param {number} decimals
  */
-export function formatComplex(c, mode = 'phasor', decimals = 4) {
+export function formatComplex(c, mode = 'rect', decimals = 4) {
   if (!c) return '—';
   if (mode === 'phasor') return c.toPhasor(decimals);
   return c.toRect(decimals);

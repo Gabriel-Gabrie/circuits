@@ -44,18 +44,21 @@
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-subtle);
     padding: var(--sp-3);
-    overflow: hidden;
-    touch-action: manipulation;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .circuit-svg {
-    width: 100%;
+    min-width: 580px;
     height: auto;
     max-height: 50vh;
   }
 
   @media (min-width: 768px) {
     .circuit-svg {
+      min-width: unset;
+      width: 100%;
       max-height: 60vh;
     }
   }

@@ -11,8 +11,11 @@
 
   function fmtVal(c) {
     if (!c) return '';
-    const m = c.magnitude >= 100 ? c.magnitude.toFixed(0) : c.magnitude.toFixed(1);
-    return m + '\u2220' + c.angle.toFixed(1) + '\u00B0';
+    const r = Math.abs(c.re) >= 100 ? c.re.toFixed(0) : c.re.toFixed(1);
+    const im = Math.abs(c.im) >= 100 ? Math.abs(c.im).toFixed(0) : Math.abs(c.im).toFixed(1);
+    if (Math.abs(c.im) < 0.05) return r;
+    if (Math.abs(c.re) < 0.05) return (c.im < 0 ? '-j' : 'j') + im;
+    return r + (c.im >= 0 ? '+j' : '-j') + im;
   }
 </script>
 

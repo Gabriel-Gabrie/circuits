@@ -30,6 +30,14 @@
     }
   });
 
+  const isBalancedModal = $derived.by(() => {
+    if (!modal) return false;
+    if (modal.type === 'source' || modal.type === 'sourceZ') return circuitState.sourceBalanced;
+    if (modal.type === 'load') return circuitState.loadBalanced;
+    if (modal.type === 'line') return true;
+    return false;
+  });
+
   const currentValue = $derived.by(() => {
     if (!modal) return null;
     switch (modal.type) {
@@ -48,29 +56,24 @@
 
     switch (modal.type) {
       case 'source':
-        if (circuitState.sourceBalanced && modal.index === 0) {
+        if (circuitState.sourceBalanced) {
           applySourceBalanced(circuitState, val);
         } else {
           circuitState.sourceVoltages[modal.index] = val;
         }
         break;
       case 'sourceZ':
-        if (circuitState.sourceBalanced && modal.index === 0) {
+        if (circuitState.sourceBalanced) {
           applyBalancedImpedance(circuitState.sourceImpedances, val);
         } else {
           circuitState.sourceImpedances[modal.index] = val;
         }
         break;
       case 'line':
-        if (modal.index === 0) {
-          // Line impedances typically balanced together
-          applyBalancedImpedance(circuitState.lineImpedances, val);
-        } else {
-          circuitState.lineImpedances[modal.index] = val;
-        }
+        applyBalancedImpedance(circuitState.lineImpedances, val);
         break;
       case 'load':
-        if (circuitState.loadBalanced && modal.index === 0) {
+        if (circuitState.loadBalanced) {
           applyBalancedImpedance(circuitState.loadImpedances, val);
         } else {
           circuitState.loadImpedances[modal.index] = val;
@@ -104,7 +107,12 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="modal-sheet" onclick={(e) => e.stopPropagation()}>
     <div class="modal-header">
-      <h3 class="modal-title">{title}</h3>
+      <div>
+        <h3 class="modal-title">{title}</h3>
+        {#if isBalancedModal}
+          <p class="modal-balanced-hint">Balanced \u2014 applies to all phases</p>
+        {/if}
+      </div>
       <button class="modal-close" onclick={close} aria-label="Close">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="18" y1="6" x2="6" y2="18" />
@@ -168,6 +176,13 @@
     font-size: var(--text-base);
     font-weight: 600;
     font-family: var(--font-mono);
+  }
+
+  .modal-balanced-hint {
+    font-size: var(--text-xs);
+    color: var(--accent);
+    margin-top: 2px;
+    font-weight: 500;
   }
 
   .modal-close {

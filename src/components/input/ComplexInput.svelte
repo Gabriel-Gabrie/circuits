@@ -4,7 +4,7 @@
 
   let { value = null, onchange = () => {} } = $props();
 
-  let mode = $state('phasor'); // 'phasor' | 'rect'
+  let mode = $state('rect'); // 'phasor' | 'rect'
 
   // Phasor inputs
   let mag = $state('');
@@ -84,23 +84,23 @@
     {#if mode === 'phasor'}
       <div class="field">
         <label class="field-label">Magnitude
-          <input type="number" step="any" bind:value={mag} placeholder="0" inputmode="decimal" />
+          <input type="number" step="any" bind:value={mag} placeholder="0"  />
         </label>
       </div>
       <div class="field">
         <label class="field-label">Angle (°)
-          <input type="number" step="any" bind:value={angle} placeholder="0" inputmode="decimal" />
+          <input type="number" step="any" bind:value={angle} placeholder="0"  />
         </label>
       </div>
     {:else}
       <div class="field">
         <label class="field-label">Real
-          <input type="number" step="any" bind:value={real} placeholder="0" inputmode="decimal" />
+          <input type="number" step="any" bind:value={real} placeholder="0"  />
         </label>
       </div>
       <div class="field">
         <label class="field-label">Imaginary (j)
-          <input type="number" step="any" bind:value={imag} placeholder="0" inputmode="decimal" />
+          <input type="number" step="any" bind:value={imag} placeholder="0"  />
         </label>
       </div>
     {/if}
