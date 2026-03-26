@@ -38,7 +38,7 @@
           <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="8" cy="8" r="7.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="600">i</text></svg>
         </button>
         {#if activeTooltip === 'source'}
-          <span class="info-tooltip">All three source voltages have equal magnitude with symmetrical phase shifts.<br><br>Only phase A needs to be set. B and C are auto-filled.</span>
+          <span class="info-tooltip"><b>Balanced:</b> all three source voltages have equal magnitude with symmetrical phase shifts. Only phase A needs to be set. B and C are auto-filled.<br><br><b>Unbalanced:</b> each source voltage can be set independently with different magnitudes and angles.</span>
         {/if}
       </span>
       <div class="yes-no">
@@ -58,7 +58,7 @@
           <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="8" cy="8" r="7.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="600">i</text></svg>
         </button>
         {#if activeTooltip === 'load'}
-          <span class="info-tooltip">All three load impedances are identical.<br><br>Only one value needs to be set. The others are auto-filled.</span>
+          <span class="info-tooltip"><b>Balanced:</b> all three load impedances are identical. Only one value needs to be set. The others are auto-filled.<br><br><b>Unbalanced:</b> each load impedance can be set independently with different values.</span>
         {/if}
       </span>
       <div class="yes-no">
@@ -81,7 +81,7 @@
         <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="8" cy="8" r="7.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="600">i</text></svg>
       </button>
       {#if activeTooltip === 'sequence'}
-        <span class="info-tooltip"><b>Positive (abc):</b> phases are 120° apart in A-B-C order.<br><b>Negative (acb):</b> reversed order (A-C-B).<br><b>Custom:</b> set any phase angles manually.</span>
+        <span class="info-tooltip"><b>Positive (abc):</b> phases are 120° apart in A-B-C order.<br><br><b>Negative (acb):</b> reversed order (A-C-B).<br><br><b>Custom:</b> set any phase angles manually.</span>
       {/if}
     </span>
     <SegmentedControl
