@@ -101,6 +101,13 @@
     if (e.key === 'Escape') close();
     if (e.key === 'Enter') apply();
   }
+
+  function autofocusFirst(node) {
+    setTimeout(() => {
+      const input = node.querySelector('input');
+      if (input) input.focus();
+    }, 260); // after slide-up animation
+  }
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -110,12 +117,12 @@
 <div class="modal-overlay" onclick={close}>
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="modal-sheet" onclick={(e) => e.stopPropagation()}>
+  <div class="modal-sheet" onclick={(e) => e.stopPropagation()} use:autofocusFirst>
     <div class="modal-header">
       <div>
         <h3 class="modal-title">{title}</h3>
         {#if isBalancedModal}
-          <p class="modal-balanced-hint">Balanced \u2014 applies to all phases</p>
+          <p class="modal-balanced-hint">Balanced — applies to all phases</p>
         {/if}
       </div>
       <button class="modal-close" onclick={close} aria-label="Close">

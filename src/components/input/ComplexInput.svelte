@@ -121,7 +121,7 @@
         </label>
       </div>
       <div class="field">
-        <label class="field-label">Imaginary (j)
+        <label class="field-label">Reactive (j)
           <div class="input-row">
             <input type="text" inputmode="decimal" bind:value={imag} placeholder="0" />
             <button type="button" class="sign-btn" onclick={() => toggleSign('imag')}>&plusmn;</button>

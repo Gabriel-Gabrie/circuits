@@ -5,6 +5,7 @@
   import ConfigPanel from './components/input/ConfigPanel.svelte';
   import InputModal from './components/input/InputModal.svelte';
   import ResultsPanel from './components/results/ResultsPanel.svelte';
+  import { untrack } from 'svelte';
   import { circuitState, applySourceBalanced } from './lib/state/circuit.svelte.js';
   import { solveCircuit } from './lib/math/solver.js';
 
@@ -14,19 +15,21 @@
   // Auto-recalculate when config changes (if already calculated once)
   $effect(() => {
     const _config = circuitState.config;
-    if (hasCalculated) {
-      recalculate();
-    }
+    untrack(() => {
+      if (hasCalculated) recalculate();
+    });
   });
 
   // When sequence changes, update balanced source voltages
   $effect(() => {
     const _seq = circuitState.sequence;
     const _customAngles = [...circuitState.customAngles];
-    if (circuitState.sourceBalanced && circuitState.sourceVoltages[0]) {
-      applySourceBalanced(circuitState, circuitState.sourceVoltages[0]);
+    untrack(() => {
+      if (circuitState.sourceBalanced && circuitState.sourceVoltages[0]) {
+        applySourceBalanced(circuitState, circuitState.sourceVoltages[0]);
+      }
       if (hasCalculated) recalculate();
-    }
+    });
   });
 
   function recalculate() {
