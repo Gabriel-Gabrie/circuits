@@ -11,7 +11,7 @@ on:
 env:
   APP_ID: com.gabrielgabrie.circuits
   APP_NAME: Circuits
-  XCODE_WORKSPACE: ios/App/App.xcworkspace
+  XCODE_PROJECT: ios/App/App.xcodeproj
   SCHEME: App
 
 jobs:
@@ -82,7 +82,7 @@ jobs:
           PROVISION_PROFILE_NAME: ${{ secrets.PROVISION_PROFILE_NAME }}
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -showBuildSettings | head -5
+          xcodebuild -project App.xcodeproj -scheme App -showBuildSettings | head -5
           # Set manual signing
           sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/' App.xcodeproj/project.pbxproj
           sed -i '' 's/DEVELOPMENT_TEAM = "";/DEVELOPMENT_TEAM = "26MD9LSRY7";/' App.xcodeproj/project.pbxproj
@@ -90,7 +90,7 @@ jobs:
       - name: Archive
         run: |
           xcodebuild archive \
-            -workspace $XCODE_WORKSPACE \
+            -project $XCODE_PROJECT \
             -scheme $SCHEME \
             -configuration Release \
             -destination 'generic/platform=iOS' \
