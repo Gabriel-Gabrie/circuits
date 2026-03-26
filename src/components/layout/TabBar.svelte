@@ -32,8 +32,8 @@
     display: flex;
     background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
-    padding: 6px 0;
-    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+    padding: 4px 0 0;
+    padding-bottom: max(0px, env(safe-area-inset-bottom, 8px));
     flex-shrink: 0;
   }
 
