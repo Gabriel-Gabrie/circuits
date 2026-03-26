@@ -84,8 +84,16 @@
 
   .scroll-arrow {
     font-size: 24px;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-weight: 700;
+  }
+
+  :global([data-theme="dark"]) .scroll-hint {
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08) 70%);
+  }
+
+  :global([data-theme="light"]) .scroll-hint {
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.06) 70%);
   }
 
   @keyframes pulse-hint {
