@@ -53,12 +53,11 @@
 
 <style>
   .header {
-    padding: var(--sp-4);
-    padding-top: calc(var(--sp-4) + env(safe-area-inset-top));
-    padding-bottom: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    padding-top: calc(var(--sp-2) + env(safe-area-inset-top, 0px));
     display: flex;
     flex-direction: column;
-    gap: var(--sp-3);
+    gap: var(--sp-2);
     border-bottom: 1px solid var(--border-subtle);
     background: var(--bg-surface);
   }

@@ -36,8 +36,8 @@
     display: flex;
     background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
-    padding: var(--sp-1) 0;
-    padding-bottom: max(var(--sp-1), env(safe-area-inset-bottom));
+    padding: 6px 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     z-index: 100;
   }
 
@@ -46,8 +46,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-    padding: var(--sp-1) var(--sp-2);
+    gap: 1px;
+    padding: 4px var(--sp-2);
     color: var(--text-muted);
     font-size: var(--text-xs);
     transition: color var(--transition-fast);

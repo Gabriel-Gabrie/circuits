@@ -95,7 +95,7 @@
   .main {
     flex: 1;
     padding: var(--sp-4);
-    padding-bottom: calc(var(--sp-4) + 60px); /* space for tab bar */
+    padding-bottom: calc(var(--sp-4) + 52px + env(safe-area-inset-bottom, 0px)); /* space for tab bar + home indicator */
   }
 
   .main-content {
