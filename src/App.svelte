@@ -89,13 +89,16 @@
   .app {
     display: flex;
     flex-direction: column;
-    min-height: 100dvh;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .main {
     flex: 1;
     padding: var(--sp-4);
-    padding-bottom: calc(var(--sp-3) + 44px + env(safe-area-inset-bottom, 0px)); /* space for tab bar + home indicator */
+    overflow-y: auto;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .main-content {
@@ -145,10 +148,6 @@
   }
 
   @media (min-width: 768px) {
-    .main {
-      padding-bottom: var(--sp-4);
-    }
-
     .hidden {
       display: flex;
     }

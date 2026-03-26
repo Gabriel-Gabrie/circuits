@@ -60,6 +60,7 @@
     gap: var(--sp-1);
     border-bottom: 1px solid var(--border-subtle);
     background: var(--bg-surface);
+    flex-shrink: 0;
   }
 
   .header-top {

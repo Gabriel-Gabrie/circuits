@@ -29,16 +29,12 @@
 
 <style>
   .tabbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     display: flex;
     background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
     padding: 4px 0 0;
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) - 12px);
-    z-index: 100;
+    flex-shrink: 0;
   }
 
   @supports not (padding: env(safe-area-inset-bottom)) {
@@ -55,7 +51,7 @@
     gap: 0;
     padding: 3px var(--sp-2);
     color: var(--text-muted);
-    font-size: 9px;
+    font-size: var(--text-xs);
     transition: color var(--transition-fast);
   }
 
