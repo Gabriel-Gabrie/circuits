@@ -97,7 +97,7 @@
     flex: 1;
     padding: var(--sp-4);
     overflow-y: auto;
-    overscroll-behavior-y: none;
+    overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
