@@ -26,7 +26,7 @@
         <circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="2"/>
         <path d="M8 16q4-7 8 0t8 0" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
       </svg>
-      <span>Circuits</span>
+      <span>Circuits — 3-Phase AC Analyzer</span>
     </h1>
     <div class="header-actions">
       <ThemeToggle />
