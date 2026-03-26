@@ -5,29 +5,45 @@
   import ConfigPanel from './components/input/ConfigPanel.svelte';
   import InputModal from './components/input/InputModal.svelte';
   import ResultsPanel from './components/results/ResultsPanel.svelte';
-  import { circuitState } from './lib/state/circuit.svelte.js';
+  import { circuitState, applySourceBalanced } from './lib/state/circuit.svelte.js';
   import { solveCircuit } from './lib/math/solver.js';
 
   let error = $state(null);
+  let hasCalculated = $state(false);
 
-  // Auto-recalculate when config changes (if results already exist)
+  // Auto-recalculate when config changes (if already calculated once)
   $effect(() => {
-    const _config = circuitState.config; // track config changes
-    if (circuitState.results) {
-      try {
-        circuitState.results = solveCircuit(circuitState);
-        error = null;
-      } catch (e) {
-        error = e.message;
-      }
+    const _config = circuitState.config;
+    if (hasCalculated) {
+      recalculate();
     }
   });
+
+  // When sequence changes, update balanced source voltages
+  $effect(() => {
+    const _seq = circuitState.sequence;
+    const _customAngles = [...circuitState.customAngles];
+    if (circuitState.sourceBalanced && circuitState.sourceVoltages[0]) {
+      applySourceBalanced(circuitState, circuitState.sourceVoltages[0]);
+      if (hasCalculated) recalculate();
+    }
+  });
+
+  function recalculate() {
+    try {
+      circuitState.results = solveCircuit(circuitState);
+      error = null;
+    } catch (e) {
+      error = e.message;
+      circuitState.results = null;
+    }
+  }
 
   function handleCalculate() {
     error = null;
     try {
-      const results = solveCircuit(circuitState);
-      circuitState.results = results;
+      circuitState.results = solveCircuit(circuitState);
+      hasCalculated = true;
       if (window.innerWidth < 768) {
         circuitState.activeTab = 'results';
       }
