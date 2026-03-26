@@ -26,7 +26,8 @@
         <circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="2"/>
         <path d="M8 16q4-7 8 0t8 0" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
       </svg>
-      <span>Circuits — 3-Phase AC Analyzer</span>
+      <span class="title-brand">Circuits</span>
+      <span class="title-sub">3-Phase AC Analyzer</span>
     </h1>
     <div class="header-actions">
       <ThemeToggle />
@@ -74,6 +75,19 @@
     font-size: var(--text-lg);
     font-weight: 600;
     letter-spacing: -0.02em;
+  }
+
+  .title-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .title-sub {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
   .logo-icon {
