@@ -6,7 +6,7 @@
     "iosScheme": "capacitor"
   },
   "ios": {
-    "contentInset": "automatic",
+    "contentInset": "never",
     "backgroundColor": "#0f1117",
     "preferredContentMode": "mobile"
   },

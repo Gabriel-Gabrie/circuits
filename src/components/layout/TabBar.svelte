@@ -33,7 +33,7 @@
     background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
     padding: 4px 0 0;
-    padding-bottom: calc(2px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 8px);
     flex-shrink: 0;
   }
 
