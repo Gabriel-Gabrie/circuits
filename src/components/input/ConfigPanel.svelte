@@ -11,6 +11,12 @@
   const displayAngles = $derived(getPhaseAngles(circuitState));
   const isCustom = $derived(circuitState.sequence === 'custom');
 
+  let activeTooltip = $state(null);
+
+  function toggleTooltip(id) {
+    activeTooltip = activeTooltip === id ? null : id;
+  }
+
   function handleSequence(val) {
     circuitState.sequence = val;
   }
@@ -27,7 +33,14 @@
   <!-- Balanced questions -->
   <div class="config-row">
     <div class="balanced-group">
-      <span class="question">Are the sources balanced?</span>
+      <span class="question">Are the sources balanced?
+        <button class="info-btn" onclick={() => toggleTooltip('source')} aria-label="Info">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="8" cy="8" r="7.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="600">i</text></svg>
+        </button>
+        {#if activeTooltip === 'source'}
+          <span class="info-tooltip">When balanced, all three source voltages have equal magnitude with symmetrical phase shifts. Only phase A needs to be set — B and C are auto-filled.</span>
+        {/if}
+      </span>
       <div class="yes-no">
         <button
           class="yn-btn" class:active={circuitState.sourceBalanced}
@@ -40,7 +53,14 @@
       </div>
     </div>
     <div class="balanced-group">
-      <span class="question">Are the loads balanced?</span>
+      <span class="question">Are the loads balanced?
+        <button class="info-btn" onclick={() => toggleTooltip('load')} aria-label="Info">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="8" cy="8" r="7.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="600">i</text></svg>
+        </button>
+        {#if activeTooltip === 'load'}
+          <span class="info-tooltip">When balanced, all three load impedances are identical. Only one value needs to be set — the others are auto-filled.</span>
+        {/if}
+      </span>
       <div class="yes-no">
         <button
           class="yn-btn" class:active={circuitState.loadBalanced}
@@ -56,7 +76,14 @@
 
   <!-- Phase sequence -->
   <div class="config-section">
-    <span class="config-label">Phase Sequence</span>
+    <span class="config-label">Phase Sequence
+      <button class="info-btn" onclick={() => toggleTooltip('sequence')} aria-label="Info">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="8" cy="8" r="7.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="600">i</text></svg>
+      </button>
+      {#if activeTooltip === 'sequence'}
+        <span class="info-tooltip">Positive (abc): phases are 120° apart in A-B-C order. Negative (acb): reversed order (A-C-B). Custom: set any phase angles manually.</span>
+      {/if}
+    </span>
     <SegmentedControl
       options={sequenceOptions}
       selected={circuitState.sequence}
@@ -200,6 +227,51 @@
   .angle-field input:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  .question, .config-label {
+    position: relative;
+  }
+
+  .info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin-left: 4px;
+    padding: 0;
+    color: var(--text-muted);
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+
+  .info-btn:hover {
+    opacity: 1;
+    color: var(--accent);
+  }
+
+  .info-tooltip {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: calc(100% + 6px);
+    z-index: 50;
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: 1.45;
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px var(--shadow);
+    max-width: 260px;
+    width: max-content;
   }
 
   @media (max-width: 480px) {
