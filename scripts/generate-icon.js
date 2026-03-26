@@ -19,14 +19,14 @@ for (let i = 0; i <= 100; i++) {
 }
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <rect width="${size}" height="${size}" rx="224" fill="#0f1117"/>
+  <rect width="${size}" height="${size}" fill="#0f1117"/>
   <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#7c8cf8" stroke-width="42"/>
   <path d="${wave}" fill="none" stroke="#7c8cf8" stroke-width="46" stroke-linecap="round"/>
 </svg>`;
 
 const outPath = join(__dirname, '..', 'ios', 'App', 'App', 'Assets.xcassets', 'AppIcon.appiconset', 'AppIcon-512@2x.png');
 
-await sharp(Buffer.from(svg)).resize(1024, 1024).png().toFile(outPath);
+await sharp(Buffer.from(svg)).resize(1024, 1024).flatten({ background: '#0f1117' }).png().toFile(outPath);
 console.log('Generated:', outPath);
 
 // Also generate for Android
