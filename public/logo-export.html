@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Export Circuits Logo as PNG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body { background: #1a1d27; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 24px; font-family: sans-serif; color: #e8eaed; }
+    canvas { border: 1px solid #3a3f4b; border-radius: 8px; }
+    button { padding: 12px 32px; background: #7c8cf8; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+    button:hover { background: #6a7bf0; }
+    .variants { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+    .variant { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    label { font-size: 13px; color: #9aa0a6; }
+  </style>
+</head>
+<body>
+  <h2>Circuits Logo Export</h2>
+  <p style="color: #9aa0a6; font-size: 14px;">Click any button to download that variant as PNG (2x resolution)</p>
+
+  <div class="variants">
+    <div class="variant">
+      <label>Dark square (512 x 512)</label>
+      <canvas id="c0" width="512" height="512"></canvas>
+      <button onclick="download('c0', 'circuits-logo-square.png')">Download Square</button>
+    </div>
+    <div class="variant">
+      <label>Dark background (720 x 160)</label>
+      <canvas id="c1" width="720" height="160"></canvas>
+      <button onclick="download('c1', 'circuits-logo-dark.png')">Download Dark</button>
+    </div>
+    <div class="variant">
+      <label>Transparent background (720 x 160)</label>
+      <canvas id="c2" width="720" height="160"></canvas>
+      <button onclick="download('c2', 'circuits-logo-transparent.png')">Download Transparent</button>
+    </div>
+    <div class="variant">
+      <label>Icon only (160 x 160)</label>
+      <canvas id="c3" width="160" height="160"></canvas>
+      <button onclick="download('c3', 'circuits-icon.png')">Download Icon</button>
+    </div>
+  </div>
+
+  <script>
+    const ACCENT = '#7c8cf8';
+    const TEXT_COLOR = '#e8eaed';
+    const BG_DARK = '#0f1117';
+
+    function waitForFont() {
+      return document.fonts.load("700 48px 'Orbitron'").then(() => {
+        return new Promise(r => setTimeout(r, 100));
+      });
+    }
+
+    function drawLogo(ctx, w, h, bg) {
+      // Background
+      if (bg) {
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+      } else {
+        ctx.clearRect(0, 0, w, h);
+      }
+
+      const cy = h / 2;
+      const r = 48;
+      const cx = 80;
+
+      // Circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = ACCENT;
+      ctx.lineWidth = 5;
+      ctx.stroke();
+
+      // Sine wave
+      ctx.beginPath();
+      ctx.lineWidth = 5.5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = ACCENT;
+      const startX = cx - 28;
+      const waveW = 28;
+      const amp = 24;
+      for (let i = 0; i <= 100; i++) {
+        const t = i / 100;
+        const x = startX + t * waveW * 2;
+        const y = cy - amp * Math.sin(t * Math.PI * 2);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Text
+      ctx.font = "700 72px 'Orbitron', sans-serif";
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.textBaseline = 'middle';
+      ctx.letterSpacing = '3px';
+      ctx.fillText('Circuits', 155, cy + 2);
+    }
+
+    function drawIcon(ctx, w, h, bg) {
+      if (bg) {
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+      } else {
+        ctx.clearRect(0, 0, w, h);
+      }
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const r = 60;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = ACCENT;
+      ctx.lineWidth = 6;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.lineWidth = 6.5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = ACCENT;
+      const startX = cx - 34;
+      const waveW = 34;
+      const amp = 28;
+      for (let i = 0; i <= 100; i++) {
+        const t = i / 100;
+        const x = startX + t * waveW * 2;
+        const y = cy - amp * Math.sin(t * Math.PI * 2);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    function drawSquare(ctx, w, h, bg) {
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const iconY = h * 0.38;
+      const r = 80;
+
+      // Circle
+      ctx.beginPath();
+      ctx.arc(cx, iconY, r, 0, Math.PI * 2);
+      ctx.strokeStyle = ACCENT;
+      ctx.lineWidth = 7;
+      ctx.stroke();
+
+      // Sine wave
+      ctx.beginPath();
+      ctx.lineWidth = 7.5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = ACCENT;
+      const startX = cx - 46;
+      const waveW = 46;
+      const amp = 38;
+      for (let i = 0; i <= 100; i++) {
+        const t = i / 100;
+        const x = startX + t * waveW * 2;
+        const y = iconY - amp * Math.sin(t * Math.PI * 2);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Text
+      ctx.font = "700 64px 'Orbitron', sans-serif";
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Circuits', cx, h * 0.72);
+
+      // Subtitle
+      ctx.font = "500 18px 'Inter', sans-serif";
+      ctx.fillStyle = '#5f6368';
+      ctx.fillText('3-Phase AC Analyzer', cx, h * 0.82);
+    }
+
+    function download(id, filename) {
+      const canvas = document.getElementById(id);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    waitForFont().then(() => {
+      // Square
+      const c0 = document.getElementById('c0');
+      drawSquare(c0.getContext('2d'), 512, 512, BG_DARK);
+
+      // Dark bg
+      const c1 = document.getElementById('c1');
+      drawLogo(c1.getContext('2d'), 720, 160, BG_DARK);
+
+      // Transparent
+      const c2 = document.getElementById('c2');
+      drawLogo(c2.getContext('2d'), 720, 160, null);
+
+      // Icon only
+      const c3 = document.getElementById('c3');
+      drawIcon(c3.getContext('2d'), 160, 160, BG_DARK);
+    });
+  </script>
+</body>
+</html>

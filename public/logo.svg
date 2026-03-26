@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" width="720" height="160">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700');
+    </style>
+  </defs>
+  <rect width="360" height="80" rx="0" fill="#0f1117"/>
+  <circle cx="40" cy="40" r="24" fill="none" stroke="#7c8cf8" stroke-width="2.5"/>
+  <path d="M26 40q7-12 14 0t14 0" fill="none" stroke="#7c8cf8" stroke-width="2.8" stroke-linecap="round"/>
+  <text x="80" y="50" font-family="'Orbitron', sans-serif" font-weight="700" font-size="36" fill="#e8eaed" letter-spacing="2">Circuits</text>
+</svg>
