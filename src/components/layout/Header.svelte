@@ -21,7 +21,13 @@
 
 <header class="header">
   <div class="header-top">
-    <h1 class="title">3φ Analyzer</h1>
+    <h1 class="title">
+      <svg class="logo-icon" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="2"/>
+        <path d="M8 16q4-7 8 0t8 0" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span>Circuits</span>
+    </h1>
     <div class="header-actions">
       <ThemeToggle />
       <button class="info-btn" onclick={() => showInfo = true} aria-label="Info">
@@ -62,9 +68,16 @@
   }
 
   .title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
     font-size: var(--text-lg);
     font-weight: 600;
     letter-spacing: -0.02em;
+  }
+
+  .logo-icon {
+    flex-shrink: 0;
   }
 
   .header-actions {

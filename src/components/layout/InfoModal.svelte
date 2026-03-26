@@ -15,7 +15,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="modal-sheet" onclick={(e) => e.stopPropagation()}>
     <div class="modal-header">
-      <h3 class="modal-title">3&#966; Analyzer</h3>
+      <h3 class="modal-title">Circuits</h3>
       <button class="modal-close" onclick={onclose} aria-label="Close">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="18" y1="6" x2="6" y2="18" />
