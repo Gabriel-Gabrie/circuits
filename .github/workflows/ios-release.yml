@@ -3,8 +3,12 @@ name: iOS Release
 on:
   workflow_dispatch:
     inputs:
+      version:
+        description: 'App version (CFBundleShortVersionString, e.g. 1.1)'
+        required: true
+        type: string
       build_number:
-        description: 'Build number'
+        description: 'Build number (CFBundleVersion)'
         required: true
         type: string
 
@@ -44,9 +48,10 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync ios
 
-      - name: Set build number
+      - name: Set app version and build number
         run: |
           cd ios/App
+          agvtool new-marketing-version ${{ github.event.inputs.version }}
           agvtool new-version -all ${{ github.event.inputs.build_number }}
 
       - name: Decode signing certificate
