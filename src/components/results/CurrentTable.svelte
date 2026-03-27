@@ -1,7 +1,12 @@
 <script>
   import { formatComplex } from '../../lib/utils/format.js';
 
-  let { results = null } = $props();
+  let {
+    results = null,
+    showLineCurrents = $bindable(true),
+    showPhaseCurrents = $bindable(false),
+    showNeutralCurrent = $bindable(false)
+  } = $props();
 
   const phaseColors = ['var(--phase-a)', 'var(--phase-b)', 'var(--phase-c)'];
 
@@ -20,7 +25,13 @@
   <h4 class="section-title">Currents</h4>
 
   <div class="subsection">
-    <span class="sub-label">Line Currents</span>
+    <div class="sub-header">
+      <span class="sub-label">Line Currents</span>
+      <label class="phasor-toggle" title="Show on phasor diagram">
+        <input type="checkbox" bind:checked={showLineCurrents} />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
     {#each results.lineCurrents as c, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{lineLabels[i]}</span>
@@ -31,7 +42,13 @@
 
   {#if !loadIsY}
   <div class="subsection">
-    <span class="sub-label">Phase Currents</span>
+    <div class="sub-header">
+      <span class="sub-label">Phase Currents</span>
+      <label class="phasor-toggle" title="Show on phasor diagram">
+        <input type="checkbox" bind:checked={showPhaseCurrents} />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
     {#each results.phaseCurrents as c, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{phaseLabels[i]}</span>
@@ -43,7 +60,13 @@
 
   {#if results.neutralCurrent}
   <div class="subsection">
-    <span class="sub-label">Neutral</span>
+    <div class="sub-header">
+      <span class="sub-label">Neutral</span>
+      <label class="phasor-toggle" title="Show on phasor diagram">
+        <input type="checkbox" bind:checked={showNeutralCurrent} />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
     <div class="result-row" style="--phase-color: var(--text-muted)">
       <span class="qty">In</span>
       <span class="val">{fmtCurrent(results.neutralCurrent)}</span>
@@ -74,11 +97,58 @@
     gap: var(--sp-1);
   }
 
+  .sub-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+
   .sub-label {
     font-size: var(--text-xs);
     color: var(--text-muted);
     font-weight: 500;
-    margin-bottom: 2px;
+  }
+
+  .phasor-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .phasor-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-track {
+    position: relative;
+    width: 28px;
+    height: 16px;
+    background: var(--border-subtle);
+    border-radius: var(--radius-full);
+    transition: background 0.2s;
+  }
+
+  .phasor-toggle input:checked + .toggle-track {
+    background: var(--accent);
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    transition: transform 0.2s;
+  }
+
+  .phasor-toggle input:checked + .toggle-track .toggle-thumb {
+    transform: translateX(12px);
   }
 
   .result-row {

@@ -4,14 +4,40 @@
   import PowerTable from './PowerTable.svelte';
   import PhasorDiagram from './PhasorDiagram.svelte';
   import { circuitState } from '../../lib/state/circuit.svelte.js';
+
+  // Phasor diagram visibility toggles
+  let showSourcePhase = $state(true);
+  let showSourceLine = $state(false);
+  let showLoadPhase = $state(false);
+  let showLoadLine = $state(false);
+  let showLineCurrents = $state(true);
+  let showPhaseCurrents = $state(false);
+  let showNeutralCurrent = $state(false);
 </script>
 
 <div class="results-panel">
   {#if circuitState.results}
-    <VoltageTable results={circuitState.results} />
-    <CurrentTable results={circuitState.results} />
+    <VoltageTable results={circuitState.results}
+      bind:showSourcePhase
+      bind:showSourceLine
+      bind:showLoadPhase
+      bind:showLoadLine
+    />
+    <CurrentTable results={circuitState.results}
+      bind:showLineCurrents
+      bind:showPhaseCurrents
+      bind:showNeutralCurrent
+    />
     <PowerTable results={circuitState.results} />
-    <PhasorDiagram results={circuitState.results} />
+    <PhasorDiagram results={circuitState.results}
+      {showSourcePhase}
+      {showSourceLine}
+      {showLoadPhase}
+      {showLoadLine}
+      {showLineCurrents}
+      {showPhaseCurrents}
+      {showNeutralCurrent}
+    />
   {:else}
     <div class="empty">
       <p class="empty-text">Enter circuit values and press Calculate to see results.</p>

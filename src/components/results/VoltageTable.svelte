@@ -1,7 +1,13 @@
 <script>
   import { formatComplex } from '../../lib/utils/format.js';
 
-  let { results = null } = $props();
+  let {
+    results = null,
+    showSourcePhase = $bindable(true),
+    showSourceLine = $bindable(false),
+    showLoadPhase = $bindable(false),
+    showLoadLine = $bindable(false)
+  } = $props();
 
   const phaseColors = ['var(--phase-a)', 'var(--phase-b)', 'var(--phase-c)'];
 
@@ -19,7 +25,13 @@
   <h4 class="section-title">Voltages</h4>
 
   <div class="subsection">
-    <span class="sub-label">Source Phase</span>
+    <div class="sub-header">
+      <span class="sub-label">Source Phase</span>
+      <label class="phasor-toggle" title="Show on phasor diagram">
+        <input type="checkbox" bind:checked={showSourcePhase} />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
     {#each results.sourcePhaseVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{srcPhaseLabels[i]}</span>
@@ -30,7 +42,13 @@
 
   {#if sourceIsY}
   <div class="subsection">
-    <span class="sub-label">Source Line</span>
+    <div class="sub-header">
+      <span class="sub-label">Source Line</span>
+      <label class="phasor-toggle" title="Show on phasor diagram">
+        <input type="checkbox" bind:checked={showSourceLine} />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
     {#each results.sourceLineVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{srcLineLabels[i]}</span>
@@ -41,7 +59,13 @@
   {/if}
 
   <div class="subsection">
-    <span class="sub-label">Load Phase</span>
+    <div class="sub-header">
+      <span class="sub-label">Load Phase</span>
+      <label class="phasor-toggle" title="Show on phasor diagram">
+        <input type="checkbox" bind:checked={showLoadPhase} />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
     {#each results.loadPhaseVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{loadPhaseLabels[i]}</span>
@@ -52,7 +76,13 @@
 
   {#if loadIsY}
   <div class="subsection">
-    <span class="sub-label">Load Line</span>
+    <div class="sub-header">
+      <span class="sub-label">Load Line</span>
+      <label class="phasor-toggle" title="Show on phasor diagram">
+        <input type="checkbox" bind:checked={showLoadLine} />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
     {#each results.loadLineVoltages as v, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{loadLineLabels[i]}</span>
@@ -85,11 +115,58 @@
     gap: var(--sp-1);
   }
 
+  .sub-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+
   .sub-label {
     font-size: var(--text-xs);
     color: var(--text-muted);
     font-weight: 500;
-    margin-bottom: 2px;
+  }
+
+  .phasor-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .phasor-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-track {
+    position: relative;
+    width: 28px;
+    height: 16px;
+    background: var(--border-subtle);
+    border-radius: var(--radius-full);
+    transition: background 0.2s;
+  }
+
+  .phasor-toggle input:checked + .toggle-track {
+    background: var(--accent);
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    transition: transform 0.2s;
+  }
+
+  .phasor-toggle input:checked + .toggle-track .toggle-thumb {
+    transform: translateX(12px);
   }
 
   .result-row {
