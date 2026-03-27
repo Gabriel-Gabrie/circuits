@@ -1,7 +1,6 @@
 <script>
   import InteractiveElement from '../InteractiveElement.svelte';
   import { circuitState } from '../../../lib/state/circuit.svelte.js';
-  import { formatComplex } from '../../../lib/utils/format.js';
 
   const phases = [
     { label: 'Z_A', color: 'var(--phase-a)', wireY: 70 },
@@ -17,7 +16,11 @@
 
   function fmtVal(c) {
     if (!c) return '';
-    return formatComplex(c, 'rect', 2);
+    const r = c.re.toFixed(2);
+    const im = Math.abs(c.im).toFixed(2);
+    if (Math.abs(c.im) < 0.005) return r;
+    if (Math.abs(c.re) < 0.005) return (c.im < 0 ? '-j' : 'j') + im;
+    return r + (c.im >= 0 ? '+j' : '-j') + im;
   }
 </script>
 
