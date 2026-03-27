@@ -8,6 +8,11 @@
   const loadIsY = $derived(results?.config === 'yy' || results?.config === 'deltay');
   const lineLabels = ['Ia', 'Ib', 'Ic'];
   const phaseLabels = $derived(loadIsY ? ['IA', 'IB', 'IC'] : ['IAB', 'IBC', 'ICA']);
+
+  function fmtCurrent(c) {
+    if (!c) return '—';
+    return `${c.magnitude.toFixed(3)}\u2220${c.angle.toFixed(2)}\u00B0`;
+  }
 </script>
 
 {#if results}
@@ -19,7 +24,7 @@
     {#each results.lineCurrents as c, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{lineLabels[i]}</span>
-        <span class="val">{formatComplex(c, 'phasor', 3)}</span>
+        <span class="val">{fmtCurrent(c)}</span>
       </div>
     {/each}
   </div>
@@ -30,7 +35,7 @@
     {#each results.phaseCurrents as c, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{phaseLabels[i]}</span>
-        <span class="val">{formatComplex(c, 'phasor', 3)}</span>
+        <span class="val">{fmtCurrent(c)}</span>
       </div>
     {/each}
   </div>
@@ -41,7 +46,7 @@
     <span class="sub-label">Neutral</span>
     <div class="result-row" style="--phase-color: var(--text-muted)">
       <span class="qty">In</span>
-      <span class="val">{formatComplex(results.neutralCurrent, 'phasor', 3)}</span>
+      <span class="val">{fmtCurrent(results.neutralCurrent)}</span>
     </div>
   </div>
   {/if}

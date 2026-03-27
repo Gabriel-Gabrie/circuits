@@ -31,6 +31,15 @@
     if (!c) return '';
     return c.magnitude.toFixed(2) + '\u2220' + c.angle.toFixed(2) + '\u00B0';
   }
+
+  function fmtRect(c) {
+    if (!c) return '';
+    const r = c.re.toFixed(2);
+    const im = Math.abs(c.im).toFixed(2);
+    if (Math.abs(c.im) < 0.005) return r;
+    if (Math.abs(c.re) < 0.005) return (c.im < 0 ? '-j' : 'j') + im;
+    return r + (c.im >= 0 ? '+j' : '-j') + im;
+  }
 </script>
 
 <!-- Triangle edges -->
@@ -95,7 +104,7 @@
     <text x={zsX + 15} y={wireYs[i] + 1} fill={color} font-size="8" text-anchor="middle" dominant-baseline="middle" opacity="0.6">Zs</text>
   </InteractiveElement>
   {#if circuitState.sourceImpedances[i]}
-    <text x={zsX + 15} y={wireYs[i] + 15} fill={color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity={isDimmed ? 0.2 : 0.5}>{fmtVal(circuitState.sourceImpedances[i])}</text>
+    <text x={zsX + 15} y={wireYs[i] + 15} fill={color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity={isDimmed ? 0.2 : 0.5}>{fmtRect(circuitState.sourceImpedances[i])}</text>
   {/if}
 
   <line x1={zsX + 30} y1={wireYs[i]} x2={lineOutX} y2={wireYs[i]} stroke="var(--svg-wire)" stroke-width="1.5" opacity={isDimmed ? 0.3 : 1} />

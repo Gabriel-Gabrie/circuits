@@ -21,6 +21,15 @@
     if (!c) return '';
     return c.magnitude.toFixed(2) + '\u2220' + c.angle.toFixed(2) + '\u00B0';
   }
+
+  function fmtRect(c) {
+    if (!c) return '';
+    const r = c.re.toFixed(2);
+    const im = Math.abs(c.im).toFixed(2);
+    if (Math.abs(c.im) < 0.005) return r;
+    if (Math.abs(c.re) < 0.005) return (c.im < 0 ? '-j' : 'j') + im;
+    return r + (c.im >= 0 ? '+j' : '-j') + im;
+  }
 </script>
 
 <!-- Neutral point -->
@@ -64,7 +73,7 @@
     <text x={zsStartX + 16} y={phase.wireY + 1} fill={phase.color} font-size="8" text-anchor="middle" dominant-baseline="middle" opacity="0.6">Zs</text>
   </InteractiveElement>
   {#if circuitState.sourceImpedances[i]}
-    <text x={zsStartX + 16} y={phase.wireY + 14} fill={phase.color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity={isDimmed ? 0.2 : 0.5}>{fmtVal(circuitState.sourceImpedances[i])}</text>
+    <text x={zsStartX + 16} y={phase.wireY + 14} fill={phase.color} font-size="7" text-anchor="middle" font-family="var(--font-mono)" opacity={isDimmed ? 0.2 : 0.5}>{fmtRect(circuitState.sourceImpedances[i])}</text>
   {/if}
 
   <!-- Wire from Zs to line out -->
