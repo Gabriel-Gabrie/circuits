@@ -19,7 +19,7 @@
     {#each results.lineCurrents as c, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{lineLabels[i]}</span>
-        <span class="val">{formatComplex(c, 'phasor', 2)}</span>
+        <span class="val">{formatComplex(c, 'phasor', 3)}</span>
       </div>
     {/each}
   </div>
@@ -30,7 +30,7 @@
     {#each results.phaseCurrents as c, i}
       <div class="result-row" style="--phase-color: {phaseColors[i]}">
         <span class="qty">{phaseLabels[i]}</span>
-        <span class="val">{formatComplex(c, 'phasor', 2)}</span>
+        <span class="val">{formatComplex(c, 'phasor', 3)}</span>
       </div>
     {/each}
   </div>
@@ -41,7 +41,7 @@
     <span class="sub-label">Neutral</span>
     <div class="result-row" style="--phase-color: var(--text-muted)">
       <span class="qty">In</span>
-      <span class="val">{formatComplex(results.neutralCurrent, 'phasor', 2)}</span>
+      <span class="val">{formatComplex(results.neutralCurrent, 'phasor', 3)}</span>
     </div>
   </div>
   {/if}
