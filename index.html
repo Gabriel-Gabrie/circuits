@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@700&display=swap" rel="stylesheet" />
   <script>
     // In production, redirect to built app in dist/
-    if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && location.protocol !== 'capacitor:' && !location.pathname.startsWith('/dist')) {
+    if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && location.protocol !== 'capacitor:' && !location.pathname.includes('/dist/')) {
       location.replace('dist/index.html');
     }
     // Apply saved theme or system preference before render to prevent flash
